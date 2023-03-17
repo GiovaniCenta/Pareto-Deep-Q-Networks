@@ -81,32 +81,14 @@ class metrics():
         """
         
         
-    def plot_p_front2(self,Xs,Ys):
+    def plot_pareto_frontier(self,Xs,Ys):
         import numpy as np
-        """
-        sorted_list = sorted([[Xs[i], Ys[i],Zs[i]] for i in range(len(Xs))], reverse=maxX)
-        
-        pareto_front = [sorted_list[0]]
-        
-        
-        for pair in sorted_list[1:]:
-            #pareto_front.append(pair)
-            if maxY:
-               
-                if pair[1] >= pareto_front[-1][1]:
-                    
-                    pareto_front.append(pair)
-            else:
-                if pair[1] <= pareto_front[-1][1]:
-                    pareto_front.append(pair)
-     
-        
-        print(self.pdict)
-        """
+
         frontier = []
+
+
         
-        Xs = self.paretor0
-        Ys = self.paretor1
+
         points = np.column_stack((Xs, Ys))
         uniques = np.unique(points,axis=0)
         
@@ -128,34 +110,35 @@ class metrics():
   
         pf_Xx = [pair[0] for pair in frontier]
         pf_Yy = [pair[1] for pair in frontier]
-          
-
-        
-      
-        
         
         Xs = points[:,0]
         Ys = points[:,1]
         
+       
+        points = list(zip(pf_Xx, pf_Yy))
+        points_sorted = sorted(points)
+        x_sorted, y_sorted = zip(*points_sorted)
 
+        # Print the sorted points
+        print("Sorted points by x-coordinate:")
+        print(list(points_sorted))
+        plt.plot(x_sorted, y_sorted, '-o')
+
+        xreal = [1,2,3,5,8,16,24,50,74,124]
+        yreal = [-1,-3,-5,-7,-8,-9,-15,-16,-19,-21]
         
-        plt.plot(Ys,Xs)
-        plt.scatter(pf_Yy,pf_Xx)
+        plt.plot(xreal,yreal)
+        
         plt.xlabel("Treasure Reward  " )
         plt.ylabel("Time Penalty " )
-        
 
-        
-        
-        
-        
-               
         plt.show()
         
 def simple_cull(inputPoints, dominates): 
     paretoPoints = set()
     candidateRowNr = 0
     dominatedPoints = set()
+    
     while True:
         candidateRow = inputPoints[candidateRowNr]
         inputPoints.remove(candidateRow)

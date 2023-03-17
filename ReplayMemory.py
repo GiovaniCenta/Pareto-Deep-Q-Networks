@@ -12,10 +12,7 @@ class ReplayMemory(object):
 
     def __init__(self, observation_shape, observation_type='float16', size=1000000, nO=1):
         self.current = 0
-        # we will only save next_states,
-        # as current state is simply the previous next state.
-        # We thus need an extra slot to prevent overlap between the first and
-        # last sample
+   
         
         self.size = size
 

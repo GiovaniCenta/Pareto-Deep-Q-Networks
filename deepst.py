@@ -15,19 +15,7 @@ from pygmo import hypervolume
 
 
 # As in Yang et al. (2019):
-DEFAULT_MAP = np.array(
-            [[0,    0,    0,   0,   0,  0,   0,   0,   0,   0,   0],
-             [0.7,  0,    0,   0,   0,  0,   0,   0,   0,   0,   0],
-             [-10,  8.2,  0,   0,   0,  0,   0,   0,   0,   0,   0],
-             [-10, -10, 11.5,  0,   0,  0,   0,   0,   0,   0,   0],
-             [-10, -10, -10, 14.0, 15.1,16.1,0,   0,   0,   0,   0],
-             [-10, -10, -10, -10, -10, -10,  0,   0,   0,   0,   0],
-             [-10, -10, -10, -10, -10, -10,  0,   0,   0,   0,   0],
-             [-10, -10, -10, -10, -10, -10, 19.6, 20.3,0,   0,   0],
-             [-10, -10, -10, -10, -10, -10, -10, -10,  0,   0,   0],
-             [-10, -10, -10, -10, -10, -10, -10, -10, 22.4, 0,   0],
-             [-10, -10, -10, -10, -10, -10, -10, -10, -10, 23.7, 0]]
-        )
+
 
 # As in Vamplew et al. (2018):
 CONCAVE_MAP = np.array(
@@ -53,7 +41,7 @@ class DeepSeaTreasure(gym.Env):
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 4}
 
     def __init__(self, dst_map=CONCAVE_MAP, float_state=False):
-        self.size = 11
+        self.size = 9
         self.window_size = 512
         self.window = None
         self.clock = None
@@ -92,8 +80,8 @@ class DeepSeaTreasure(gym.Env):
 
 
     def is_valid_state(self, state):
-        if state[0] >= 0 and state[0] <= 10 and state[1] >= 0 and state[1] <= 10:
-            if self.get_map_value(state) != -10:
+        if state[0] >= 0 and state[0] <= 9 and state[1] >= 0 and state[1] <= 9:
+            if self.get_map_value(state) != -9:
                 return True
         return False
     
@@ -117,11 +105,11 @@ class DeepSeaTreasure(gym.Env):
 
         self.font = pygame.font.SysFont(None, 30)
         canvas = pygame.Surface((self.window_size, self.window_size))
-        canvas.fill((0, 105, 148))
+        canvas.fill((0, 95, 148))
 
         for i in range(self.sea_map.shape[0]):
             for j in range(self.sea_map.shape[1]):
-                if self.sea_map[i,j] == -10:
+                if self.sea_map[i,j] == -9:
                     pygame.draw.rect(
                         canvas,
                         (0, 0, 0),
@@ -180,7 +168,7 @@ class DeepSeaTreasure(gym.Env):
 
 
     def reset(self, seed=None, return_info=False, **kwargs):
-        super().reset(seed=seed)
+        
         #self.np_random.seed(seed)
 
         self.current_state = np.array([0, 0], dtype=np.int32)
@@ -198,7 +186,7 @@ class DeepSeaTreasure(gym.Env):
             self.current_state = next_state
 
         treasure_value = self.get_map_value(self.current_state)
-        if treasure_value == 0 or treasure_value == -10:
+        if treasure_value == 0 or treasure_value == -9:
             treasure_value = 0.0
             terminal = False
         else:
